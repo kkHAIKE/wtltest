@@ -1,6 +1,6 @@
 # WTL Test Application
 
-A comprehensive WTL 10.0 test application built with [OpenATL](https://github.com/kkHAIKE/OpenATL) and [llvm-mingw](https://github.com/mstorsjo/llvm-mingw), demonstrating cross-compilation of [WTL](https://wtl.sourceforge.io) programs on non-Windows platforms.
+A comprehensive [WTL](https://wtl.sourceforge.io) 10.0 test application built with [OpenATL](https://github.com/kkHAIKE/OpenATL) and [llvm-mingw](https://github.com/mstorsjo/llvm-mingw), demonstrating that WTL programs can be compiled and run using the MinGW toolchain -- enabling Windows WTL application builds on non-Windows platforms (macOS, Linux).
 
 ## Screenshot
 
@@ -77,7 +77,7 @@ wtltest/
 ├── cmake/
 │   └── llvm-mingw.cmake  # Cross-compiler toolchain file
 └── 3rdparty/
-    ├── openatl/          # OpenATL - clean-room ATL for non-Windows platforms
+    ├── openatl/          # OpenATL - clean-room ATL for MinGW toolchain
     └── wtl/include/      # WTL 10.0 headers (not included, see Setup)
 ```
 
