@@ -1,0 +1,298 @@
+#include "resource.h"
+
+// Constants that llvm-rc can't get from Windows headers
+#ifndef IDC_STATIC
+#define IDC_STATIC      -1
+#endif
+#ifndef DS_SETFONT
+#define DS_SETFONT      0x0040
+#endif
+#ifndef DS_MODALFRAME
+#define DS_MODALFRAME   0x0080
+#endif
+#ifndef DS_FIXEDSYS
+#define DS_FIXEDSYS     0x0008
+#endif
+
+// WTL standard command IDs
+#ifndef ID_APP_EXIT
+#define ID_APP_EXIT         0xE141
+#endif
+#ifndef ID_APP_ABOUT
+#define ID_APP_ABOUT        0xE140
+#endif
+#ifndef ID_VIEW_TOOLBAR
+#define ID_VIEW_TOOLBAR     0xE800
+#endif
+#ifndef ID_VIEW_STATUS_BAR
+#define ID_VIEW_STATUS_BAR  0xE801
+#endif
+
+// Control class names for CONTROL statements
+#define CLS_LISTVIEW    "SysListView32"
+#define CLS_TREEVIEW    "SysTreeView32"
+#define CLS_TRACKBAR    "msctls_trackbar32"
+#define CLS_PROGRESS    "msctls_progress32"
+#define CLS_UPDOWN      "msctls_updown32"
+#define CLS_HOTKEY      "msctls_hotkey32"
+#define CLS_DATETIMEPICK "SysDateTimePick32"
+#define CLS_IPADDRESS   "SysIPAddress32"
+#define CLS_TAB         "SysTabControl32"
+#define CLS_LINK        "SysLink"
+#define CLS_MONTHCAL    "SysMonthCal32"
+#define CLS_COMBOBOXEX  "ComboBoxEx32"
+#define CLS_RICHEDIT    "RICHEDIT50W"
+
+// Common control styles
+#define LVS_REPORT          0x0001
+#define LVS_SHOWSELALWAYS   0x0008
+#define TVS_HASBUTTONS      0x0001
+#define TVS_HASLINES        0x0002
+#define TVS_LINESATROOT     0x0004
+#define TVS_SHOWSELALWAYS   0x0020
+#define TBS_AUTOTICKS       0x0001
+#define UDS_SETBUDDYINT     0x0002
+#define UDS_ALIGNRIGHT      0x0004
+#define UDS_AUTOBUDDY       0x0010
+#define UDS_ARROWKEYS       0x0020
+#define DTS_SHORTDATECENTURYFORMAT 0x000C
+#define CBS_DROPDOWNLIST    0x0003
+#define LBS_NOTIFY          0x0001
+#define ES_AUTOHSCROLL      0x0080
+#define ES_NUMBER           0x2000
+#define ES_MULTILINE        0x0004
+#define ES_AUTOVSCROLL      0x0040
+#define ES_WANTRETURN       0x1000
+#define BS_PUSHBUTTON       0x0000
+#define BS_AUTOCHECKBOX     0x0003
+#define BS_AUTORADIOBUTTON  0x0009
+#define BS_GROUPBOX         0x0007
+#define BS_AUTO3STATE       0x0006
+#define SBS_VERT            0x0001
+#define SBS_HORZ            0x0000
+#define ES_PASSWORD         0x0020
+#define ES_READONLY         0x0800
+#define SS_ETCHEDFRAME      0x0012
+#define SS_SUNKEN           0x1000
+#define PBS_MARQUEE         0x0008
+#define PBS_SMOOTH          0x0001
+
+/////////////////////////////////////////////////////////////////////////////
+// String Table
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME   "OpenATL + WTL Test Application"
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// Menu
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",            ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",        ID_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",           ID_FILE_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4",           ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Cu&t\tCtrl+X",            ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",           ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",          ID_EDIT_PASTE
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&All Controls...",         ID_VIEW_CONTROLS
+        MENUITEM SEPARATOR
+        MENUITEM "&Toolbar",                ID_VIEW_TOOLBAR
+        MENUITEM "&Status Bar",             ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Options...",             ID_TOOLS_OPTIONS
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About...",               ID_APP_ABOUT
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// Accelerator
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// About Dialog
+
+IDD_ABOUT DIALOGEX 0, 0, 220, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | 0x80000000 | 0x00C00000 | 0x00080000
+CAPTION "About OpenATL + WTL Test"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "OpenATL + WTL 10.0 Test Application", IDC_STATIC, 14, 14, 192, 8
+    LTEXT           "Clean-room ATL for llvm-mingw", IDC_STATIC, 14, 28, 192, 8
+    LTEXT           "Built with Clang/MinGW C++17", IDC_STATIC, 14, 42, 192, 8
+    LTEXT           "Copyright (c) 2026", IDC_STATIC, 14, 60, 192, 8
+    DEFPUSHBUTTON   "OK", 1, 84, 80, 50, 14
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// All Controls Dialog
+
+IDD_CONTROLS DIALOGEX 0, 0, 700, 376
+STYLE DS_SETFONT | DS_FIXEDSYS | 0x80000000 | 0x00C00000 | 0x00080000 | 0x00040000 | 0x00020000 | 0x00010000
+CAPTION "All WTL Controls Showcase"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    // =============== TOP ROW ===============
+
+    // --- Column 1: Standard Controls ---
+    CONTROL         "Standard Controls", IDC_GROUP1, "Button", BS_GROUPBOX, 4, 4, 224, 172
+
+    LTEXT           "Edit:", IDC_STATIC, 12, 18, 18, 8
+    EDITTEXT        IDC_EDIT1, 32, 16, 188, 14, ES_AUTOHSCROLL
+
+    LTEXT           "Password:", IDC_STATIC, 12, 36, 38, 8
+    EDITTEXT        IDC_EDIT_PASSWD, 54, 34, 166, 14, ES_PASSWORD | ES_AUTOHSCROLL | 0x00010000
+
+    LTEXT           "ComboBox:", IDC_STATIC, 12, 54, 38, 8
+    COMBOBOX        IDC_COMBO1, 54, 52, 166, 100, CBS_DROPDOWNLIST | 0x00200000 | 0x00010000
+
+    PUSHBUTTON      "Push Button", IDC_BUTTON1, 12, 72, 66, 14
+    CONTROL         "CheckBox", IDC_CHECK1, "Button", BS_AUTOCHECKBOX | 0x00010000, 84, 74, 54, 10
+    CONTROL         "Radio 1", IDC_RADIO1, "Button", BS_AUTORADIOBUTTON | 0x00010000, 144, 74, 50, 10
+
+    LTEXT           "ListBox:", IDC_STATIC, 12, 92, 30, 8
+    LISTBOX         IDC_LISTBOX, 12, 102, 98, 66, LBS_NOTIFY | 0x00200000 | 0x00800000 | 0x00010000
+    CONTROL         "", IDC_SCROLLBAR, "ScrollBar", SBS_VERT, 114, 102, 12, 66
+
+    LTEXT           "Status:", IDC_STATIC, 132, 92, 28, 8
+    LTEXT           "Ready", IDC_STATIC_STATUS, 132, 104, 88, 10, SS_SUNKEN
+
+    // --- Column 2: ListView & TreeView ---
+    CONTROL         "ListView && TreeView", IDC_GROUP2, "Button", BS_GROUPBOX, 232, 4, 236, 172
+    CONTROL         "", IDC_LISTVIEW, CLS_LISTVIEW, LVS_REPORT | LVS_SHOWSELALWAYS | 0x00800000 | 0x00010000, 240, 18, 110, 150
+    CONTROL         "", IDC_TREEVIEW, CLS_TREEVIEW, TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS | TVS_SHOWSELALWAYS | 0x00800000 | 0x00010000, 354, 18, 106, 150
+
+    // --- Column 3: Common Controls ---
+    CONTROL         "Common Controls", IDC_GROUP3, "Button", BS_GROUPBOX, 472, 4, 224, 172
+
+    LTEXT           "TrackBar:", IDC_STATIC, 480, 18, 36, 8
+    CONTROL         "", IDC_SLIDER, CLS_TRACKBAR, TBS_AUTOTICKS | 0x00010000, 520, 16, 168, 20
+
+    LTEXT           "Progress:", IDC_STATIC, 480, 40, 36, 8
+    CONTROL         "", IDC_PROGRESS, CLS_PROGRESS, 0x00800000, 520, 38, 168, 14
+
+    LTEXT           "Smooth:", IDC_STATIC, 480, 58, 30, 8
+    CONTROL         "", IDC_PROGRESS2, CLS_PROGRESS, PBS_SMOOTH | 0x00800000, 520, 56, 168, 14
+
+    LTEXT           "UpDown:", IDC_STATIC, 480, 76, 30, 8
+    EDITTEXT        IDC_SPIN_EDIT, 514, 74, 40, 14, ES_NUMBER
+    CONTROL         "", IDC_SPIN, CLS_UPDOWN, UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS, 544, 74, 10, 14
+
+    LTEXT           "HotKey:", IDC_STATIC, 570, 76, 30, 8
+    CONTROL         "", IDC_HOTKEY, CLS_HOTKEY, 0x00800000 | 0x00010000, 602, 74, 86, 14
+
+    LTEXT           "DatePick:", IDC_STATIC, 480, 96, 36, 8
+    CONTROL         "", IDC_DATEPICKER, CLS_DATETIMEPICK, DTS_SHORTDATECENTURYFORMAT | 0x00010000, 520, 94, 168, 14
+
+    LTEXT           "IP Addr:", IDC_STATIC, 480, 116, 34, 8
+    CONTROL         "", IDC_IPADDRESS, CLS_IPADDRESS, 0x00010000, 520, 114, 100, 14
+
+    LTEXT           "HScroll:", IDC_STATIC, 480, 136, 32, 8
+    CONTROL         "", IDC_HSCROLLBAR, "ScrollBar", SBS_HORZ, 514, 134, 174, 12
+
+    LTEXT           "Link:", IDC_STATIC, 480, 154, 18, 8
+    CONTROL         "<a>SysLink Control</a>", IDC_LINK, CLS_LINK, 0x00010000, 502, 152, 186, 14
+
+    // =============== BOTTOM ROW ===============
+
+    // --- Column 1: Calendar & Radio ---
+    CONTROL         "Calendar && Radio", IDC_STATIC, "Button", BS_GROUPBOX, 4, 180, 224, 168
+
+    CONTROL         "", IDC_MONTHCAL, CLS_MONTHCAL, 0x00010000, 12, 194, 208, 86
+
+    CONTROL         "Radio Group", IDC_GROUP5, "Button", BS_GROUPBOX, 12, 284, 130, 44
+    CONTROL         "Option A", IDC_RADIO2, "Button", BS_AUTORADIOBUTTON | 0x00020000 | 0x00010000, 20, 296, 52, 10
+    CONTROL         "Option B", IDC_RADIO3, "Button", BS_AUTORADIOBUTTON | 0x00010000, 20, 310, 52, 10
+    CONTROL         "Option C", IDC_RADIO4, "Button", BS_AUTORADIOBUTTON | 0x00010000, 76, 296, 52, 10
+
+    CONTROL         "3-State", IDC_CHECK2, "Button", BS_AUTO3STATE | 0x00010000, 12, 334, 56, 10
+    CONTROL         "Read-Only", IDC_CHECK3, "Button", BS_AUTOCHECKBOX | 0x00010000, 78, 334, 64, 10
+    PUSHBUTTON      "Reset All", IDC_BUTTON2, 152, 334, 68, 14
+
+    // --- Column 2: Text Controls ---
+    CONTROL         "Text Controls", IDC_STATIC, "Button", BS_GROUPBOX, 232, 180, 236, 168
+
+    LTEXT           "RichEdit:", IDC_STATIC, 240, 194, 34, 8
+    CONTROL         "", IDC_RICHEDIT, CLS_RICHEDIT, ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | 0x00800000 | 0x00200000 | 0x00010000, 240, 204, 220, 54
+
+    LTEXT           "Multi-Edit:", IDC_STATIC, 240, 262, 42, 8
+    EDITTEXT        IDC_EDIT_MULTI, 240, 272, 220, 44, ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | 0x00200000 | 0x00800000 | 0x00010000
+
+    LTEXT           "Tab:", IDC_STATIC, 240, 322, 16, 8
+    CONTROL         "", IDC_TAB, CLS_TAB, 0x00010000, 258, 318, 202, 24
+
+    // --- Column 3: Additional Controls ---
+    CONTROL         "Additional Controls", IDC_GROUP4, "Button", BS_GROUPBOX, 472, 180, 224, 168
+
+    LTEXT           "ComboBoxEx:", IDC_STATIC, 480, 194, 50, 8
+    CONTROL         "", IDC_COMBOEX, CLS_COMBOBOXEX, CBS_DROPDOWNLIST | 0x00010000, 534, 192, 154, 100
+
+    LTEXT           "Etched Frame:", IDC_STATIC, 480, 216, 56, 8
+    CONTROL         "", IDC_STATIC, "Static", SS_ETCHEDFRAME, 480, 226, 208, 34
+    RTEXT           "Right-aligned", IDC_STATIC, 486, 234, 58, 8
+    CTEXT           "Center-aligned", IDC_STATIC, 550, 234, 60, 8
+    LTEXT           "Left-aligned", IDC_STATIC, 616, 234, 52, 8
+
+    PUSHBUTTON      "Disabled", IDC_STATIC, 480, 268, 60, 14, 0x08000000
+    LTEXT           "Click count: 0", IDC_STATIC, 548, 271, 80, 8
+
+    // =============== BUTTONS ===============
+    DEFPUSHBUTTON   "OK", 1, 588, 356, 50, 14
+    PUSHBUTTON      "Cancel", 2, 644, 356, 50, 14
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// Property Pages
+
+IDD_PROPPAGE1 DIALOGEX 0, 0, 240, 140
+STYLE DS_SETFONT | DS_FIXEDSYS | 0x40000000 | 0x08000000 | 0x00C00000
+CAPTION "General"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Name:", IDC_STATIC, 8, 12, 24, 8
+    EDITTEXT        IDC_PP_EDIT_NAME, 40, 10, 180, 14, ES_AUTOHSCROLL
+
+    LTEXT           "Type:", IDC_STATIC, 8, 34, 24, 8
+    COMBOBOX        IDC_PP_COMBO_TYPE, 40, 32, 180, 80, CBS_DROPDOWNLIST | 0x00200000 | 0x00010000
+
+    CONTROL         "Enabled", IDC_PP_CHECK_EN, "Button", BS_AUTOCHECKBOX | 0x00010000, 40, 56, 60, 10
+END
+
+IDD_PROPPAGE2 DIALOGEX 0, 0, 240, 140
+STYLE DS_SETFONT | DS_FIXEDSYS | 0x40000000 | 0x08000000 | 0x00C00000
+CAPTION "Advanced"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "", IDC_PP_LIST, CLS_LISTVIEW, LVS_REPORT | 0x00800000 | 0x00010000, 8, 8, 224, 70
+
+    LTEXT           "Value:", IDC_STATIC, 8, 88, 24, 8
+    CONTROL         "", IDC_PP_SLIDER, CLS_TRACKBAR, TBS_AUTOTICKS | 0x00010000, 36, 86, 196, 20
+
+    LTEXT           "Progress:", IDC_STATIC, 8, 114, 36, 8
+    CONTROL         "", IDC_PP_PROGRESS, CLS_PROGRESS, 0x00800000, 48, 112, 184, 14
+END

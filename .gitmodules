@@ -1,0 +1,3 @@
+[submodule "3rdparty/openatl"]
+	path = 3rdparty/openatl
+	url = git@github.com:kkHAIKE/OpenATL.git
