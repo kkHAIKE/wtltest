@@ -81,6 +81,10 @@ wtltest/
     └── wtl/include/      # WTL 10.0 headers (not included, see Setup)
 ```
 
+## Support
+
+If you find this project useful, consider [sponsoring my open-source work](https://github.com/sponsors/kkHAIKE).
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
